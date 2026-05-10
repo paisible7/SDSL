@@ -1,0 +1,268 @@
+<script setup>
+import { ref, reactive, computed } from 'vue'
+import { Send, Loader2, CheckCircle2, AlertCircle, MessageCircle, Mail } from 'lucide-vue-next'
+import { sendWhatsAppMessage } from '../services/twilioService'
+import { sendEmail } from '../services/emailService'
+
+/**
+ * ContactForm
+ * - Toggle (switch) entre canal WhatsApp (Twilio) et Email (EmailJS)
+ * - Validation côté client
+ * - Le formulaire et le bouton s'adaptent dynamiquement au canal choisi
+ */
+
+const channel = ref('whatsapp') // 'whatsapp' | 'email'
+
+const form = reactive({
+  name: '',
+  phone: '',
+  email: '',
+  subject: 'Demande de renseignement',
+  message: '',
+})
+
+const status = ref('idle') // 'idle' | 'loading' | 'success' | 'error'
+const errorMessage = ref('')
+const errors = reactive({})
+
+const isWhatsApp = computed(() => channel.value === 'whatsapp')
+
+const isValid = computed(() => {
+  const baseOk =
+    form.name.trim().length >= 2 && form.message.trim().length >= 10
+  if (isWhatsApp.value) {
+    return baseOk && /^\+?[0-9\s]{8,}$/.test(form.phone.trim())
+  }
+  return baseOk && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
+})
+
+function validate() {
+  errors.name = form.name.trim().length < 2 ? 'Nom requis (min. 2 caractères)' : ''
+  errors.message =
+    form.message.trim().length < 10 ? 'Message trop court (min. 10 caractères)' : ''
+
+  if (isWhatsApp.value) {
+    errors.phone = !/^\+?[0-9\s]{8,}$/.test(form.phone.trim())
+      ? 'Numéro de téléphone invalide'
+      : ''
+    errors.email = ''
+  } else {
+    errors.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
+      ? 'Email invalide'
+      : ''
+    errors.phone = ''
+  }
+  return !errors.name && !errors.phone && !errors.email && !errors.message
+}
+
+function switchChannel(value) {
+  channel.value = value
+  status.value = 'idle'
+  errorMessage.value = ''
+  Object.keys(errors).forEach((k) => (errors[k] = ''))
+}
+
+async function onSubmit() {
+  if (!validate()) return
+  status.value = 'loading'
+  errorMessage.value = ''
+
+  try {
+    const payload = {
+      name: form.name.trim(),
+      phone: form.phone.trim(),
+      email: form.email.trim(),
+      subject: form.subject,
+      message: form.message.trim(),
+    }
+
+    if (isWhatsApp.value) {
+      await sendWhatsAppMessage(payload)
+    } else {
+      await sendEmail(payload)
+    }
+
+    status.value = 'success'
+    Object.assign(form, {
+      name: '',
+      phone: '',
+      email: '',
+      subject: 'Demande de renseignement',
+      message: '',
+    })
+  } catch (err) {
+    status.value = 'error'
+    errorMessage.value = err?.message || "Une erreur est survenue. Veuillez réessayer."
+  }
+}
+</script>
+
+<template>
+  <div class="space-y-6">
+    <!-- Toggle WhatsApp / Email -->
+    <div
+      role="tablist"
+      aria-label="Canal de contact"
+      class="inline-flex w-full sm:w-auto items-center rounded-full border border-slate-200 bg-slate-50 p-1"
+    >
+      <button
+        type="button"
+        role="tab"
+        :aria-selected="isWhatsApp"
+        @click="switchChannel('whatsapp')"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-colors"
+        :class="
+          isWhatsApp
+            ? 'bg-blue-700 text-white shadow-sm'
+            : 'text-slate-600 hover:text-slate-900'
+        "
+      >
+        <MessageCircle class="h-4 w-4" />
+        WhatsApp
+      </button>
+      <button
+        type="button"
+        role="tab"
+        :aria-selected="!isWhatsApp"
+        @click="switchChannel('email')"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-colors"
+        :class="
+          !isWhatsApp
+            ? 'bg-blue-700 text-white shadow-sm'
+            : 'text-slate-600 hover:text-slate-900'
+        "
+      >
+        <Mail class="h-4 w-4" />
+        Email
+      </button>
+    </div>
+
+    <p class="text-sm text-slate-500">
+      <template v-if="isWhatsApp">
+        Votre message sera envoyé directement à notre équipe via WhatsApp (Twilio).
+      </template>
+      <template v-else>
+        Votre message sera envoyé par email à notre équipe (EmailJS).
+      </template>
+    </p>
+
+    <form
+      @submit.prevent="onSubmit"
+      class="rounded-xl border border-slate-200 bg-white p-6 lg:p-8 shadow-sm space-y-5"
+      novalidate
+    >
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Nom complet *</label>
+        <input
+          v-model="form.name"
+          type="text"
+          maxlength="100"
+          required
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+          placeholder="Jean Mukendi"
+        />
+        <p v-if="errors.name" class="mt-1 text-xs text-red-600">{{ errors.name }}</p>
+      </div>
+
+      <!-- Champ dynamique : téléphone OU email selon le canal -->
+      <div v-if="isWhatsApp">
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+          Numéro WhatsApp *
+        </label>
+        <input
+          v-model="form.phone"
+          type="tel"
+          maxlength="20"
+          required
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+          placeholder="+243 900 000 000"
+        />
+        <p v-if="errors.phone" class="mt-1 text-xs text-red-600">{{ errors.phone }}</p>
+      </div>
+
+      <div v-else>
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Adresse email *</label>
+        <input
+          v-model="form.email"
+          type="email"
+          maxlength="255"
+          required
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+          placeholder="vous@exemple.com"
+        />
+        <p v-if="errors.email" class="mt-1 text-xs text-red-600">{{ errors.email }}</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Sujet</label>
+        <select
+          v-model="form.subject"
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+        >
+          <option>Demande de renseignement</option>
+          <option>Facilitation FERI</option>
+          <option>Facilitation FERE</option>
+          <option>Acquit à Caution (AD)</option>
+          <option>Graphisme & Impression</option>
+          <option>Autre</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Message *</label>
+        <textarea
+          v-model="form.message"
+          rows="5"
+          maxlength="1000"
+          required
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+          placeholder="Décrivez votre besoin en quelques lignes..."
+        />
+        <div class="mt-1 flex justify-between text-xs">
+          <span :class="errors.message ? 'text-red-600' : 'text-slate-400'">
+            {{ errors.message || `${form.message.length}/1000` }}
+          </span>
+        </div>
+      </div>
+
+      <div
+        v-if="status === 'success'"
+        class="flex items-start gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800"
+      >
+        <CheckCircle2 class="h-5 w-5 shrink-0" />
+        <span>
+          Message envoyé avec succès via {{ isWhatsApp ? 'WhatsApp' : 'email' }}.
+          Nous vous répondrons rapidement.
+        </span>
+      </div>
+
+      <div
+        v-if="status === 'error'"
+        class="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+      >
+        <AlertCircle class="h-5 w-5 shrink-0" />
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button
+        type="submit"
+        :disabled="status === 'loading' || !isValid"
+        class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-blue-700 px-6 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto"
+      >
+        <Loader2 v-if="status === 'loading'" class="h-4 w-4 animate-spin" />
+        <component
+          v-else
+          :is="isWhatsApp ? MessageCircle : Mail"
+          class="h-4 w-4"
+        />
+        {{
+          status === 'loading'
+            ? 'Envoi en cours...'
+            : isWhatsApp
+              ? 'Envoyer via WhatsApp'
+              : 'Envoyer par Email'
+        }}
+      </button>
+    </form>
+  </div>
+</template>

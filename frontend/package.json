@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "../node_modules/.bin/vite",
-    "build": "../node_modules/.bin/run-p type-check \"build-only {@}\" --",
-    "preview": "../node_modules/.bin/vite preview",
-    "build-only": "../node_modules/.bin/vite build",
-    "type-check": "../node_modules/.bin/vue-tsc --build",
-    "lint": "../node_modules/.bin/run-s lint:*",
-    "lint:oxlint": "../node_modules/.bin/oxlint . --fix",
-    "lint:eslint": "../node_modules/.bin/eslint . --fix --cache",
-    "format": "../node_modules/.bin/prettier --write --experimental-cli src/"
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "lint": "run-s lint:*",
+    "lint:oxlint": "oxlint . --fix",
+    "lint:eslint": "eslint . --fix --cache",
+    "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.4",

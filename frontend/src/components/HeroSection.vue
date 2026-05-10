@@ -1,11 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 defineProps({
   whatsappUrl: { type: String, required: true },
 })
 
-const fullText = 'Votre partenaire fiable pour toutes vos démarches administratives et services logistiques à Lubumbashi et Kipushi.'
+const router = useRouter()
+const fullText =
+  'Votre partenaire fiable pour toutes vos démarches administratives et services logistiques à Lubumbashi et Kipushi.'
 const displayText = ref('')
 const typingSpeed = 100 // Milliseconds per character
 
@@ -24,23 +27,30 @@ onMounted(() => {
     }
   }, typingSpeed)
 })
+
+function scrollToServices() {
+  const el = document.getElementById('services')
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
 </script>
 
 <template>
   <section id="accueil" class="border-b border-slate-200 bg-slate-50">
-    
     <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-              <!-- <div class="absolute flex inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div> -->
-
       <div class="mx-auto max-w-4xl text-center">
-        <p class="mb-5 inline-block rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+        <p
+          class="mb-5 inline-block rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
+        >
           Lubumbashi · Kipushi
         </p>
         <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
           {{ displayText }}<span class="typing-cursor"></span>
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-          Nous accompagnons particuliers, transitaires et entreprises pour les démarches FERI, FERE et AD avec rapidité et sécurité.
+          Nous accompagnons particuliers, transitaires et entreprises pour les démarches FERI, FERE
+          et AD avec rapidité et sécurité.
         </p>
         <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
@@ -51,12 +61,12 @@ onMounted(() => {
           >
             Lancer une démarche
           </a>
-          <a
-            href="#services"
+          <button
+            @click="scrollToServices"
             class="inline-flex h-11 w-full items-center justify-center rounded-md border border-slate-300 bg-white px-6 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100 sm:w-auto"
           >
             Découvrir nos services
-          </a>
+          </button>
         </div>
       </div>
     </div>

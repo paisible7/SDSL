@@ -1,23 +1,21 @@
-<script setup lang="ts">
-import Navbar from './components/Navbar.vue'
-import HeroSection from './components/HeroSection.vue'
-import ServicesSection from './components/ServicesSection.vue'
-import HowItWorks from './components/HowItWorks.vue'
-import AboutSection from './components/AboutSection.vue'
-import Footer from './components/Footer.vue'
-
-const whatsappUrl = 'https://wa.me/243900080902'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="min-h-screen bg-white text-slate-900 font-sans antialiased">
-    <Navbar :whatsapp-url="whatsappUrl" />
-    <main>
-      <HeroSection :whatsapp-url="whatsappUrl" />
-      <ServicesSection />
-      <HowItWorks />
-      <AboutSection />
-    </main>
-    <Footer />
+    <transition name="fade" mode="out-in">
+      <router-view :key="$route.path" />
+    </transition>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -1,0 +1,65 @@
+/**
+ * emailService.js
+ * --------------------------------------------------------------
+ * Wrapper d'envoi d'email via EmailJS (https://www.emailjs.com/).
+ *
+ * EmailJS permet d'envoyer des emails directement depuis le frontend
+ * sans backend, en utilisant une clé publique. Idéal pour un formulaire
+ * de contact statique.
+ *
+ * INSTALLATION :
+ *   npm install @emailjs/browser
+ *
+ * CONFIGURATION (dans .env à la racine du projet Vue) :
+ *   VITE_EMAILJS_SERVICE_ID=service_xxxxxxx
+ *   VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
+ *   VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxxx
+ *
+ * TEMPLATE EmailJS attendu (variables) :
+ *   {{from_name}}, {{from_phone}}, {{from_email}},
+ *   {{subject}}, {{message}}, {{to_email}}
+ * --------------------------------------------------------------
+ */
+
+import emailjs from '@emailjs/browser'
+
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+const TO_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || 'contact@adsl-rdc.com'
+
+let initialized = false
+function ensureInit() {
+  if (!initialized) {
+    if (!PUBLIC_KEY) {
+      throw new Error('EmailJS public key manquante (VITE_EMAILJS_PUBLIC_KEY).')
+    }
+    emailjs.init({ publicKey: PUBLIC_KEY })
+    initialized = true
+  }
+}
+
+/**
+ * Envoie un email via EmailJS.
+ * @param {{name:string, phone:string, email?:string, subject:string, message:string}} payload
+ * @returns {Promise<{success:boolean}>}
+ */
+export async function sendEmail(payload) {
+  ensureInit()
+
+  if (!SERVICE_ID || !TEMPLATE_ID) {
+    throw new Error('Configuration EmailJS incomplète (SERVICE_ID / TEMPLATE_ID).')
+  }
+
+  const templateParams = {
+    from_name: payload.name,
+    from_phone: payload.phone,
+    from_email: payload.email || 'non renseigné',
+    subject: payload.subject,
+    message: payload.message,
+    to_email: TO_EMAIL,
+  }
+
+  await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+  return { success: true }
+}
