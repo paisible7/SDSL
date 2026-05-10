@@ -1,0 +1,17 @@
+<script setup lang="ts">
+defineProps({
+  icon: { type: [Object, Function], required: true },
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+})
+</script>
+
+<template>
+  <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-colors hover:border-blue-700">
+    <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-blue-50 text-blue-700">
+      <component :is="icon" class="h-5 w-5" :stroke-width="2" />
+    </div>
+    <h4 class="text-base font-semibold text-slate-900">{{ title }}</h4>
+    <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ description }}</p>
+  </div>
+</template>

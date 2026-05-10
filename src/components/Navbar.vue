@@ -1,0 +1,40 @@
+<script setup lang="ts">
+defineProps({
+  whatsappUrl: { type: String, required: true },
+})
+
+const links = [
+  { label: 'Accueil', href: '#accueil' },
+  { label: 'Services', href: '#services' },
+  { label: 'Comment ça marche', href: '#process' },
+  { label: 'À propos', href: '#about' },
+]
+</script>
+
+<template>
+  <header class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <a href="#accueil" class="text-xl font-bold tracking-tight text-slate-900">SDSL</a>
+
+      <nav class="hidden items-center gap-8 md:flex">
+        <a
+          v-for="link in links"
+          :key="link.href"
+          :href="link.href"
+          class="text-sm font-medium text-slate-600 transition-colors hover:text-blue-700"
+        >
+          {{ link.label }}
+        </a>
+      </nav>
+
+      <a
+        :href="whatsappUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex h-9 items-center justify-center rounded-md bg-blue-700 px-4 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-800"
+      >
+        Contactez-nous
+      </a>
+    </div>
+  </header>
+</template>
