@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Navbar from './Navbar.vue'
 import HeroSection from './HeroSection.vue'
+import Banner from './Banner.vue'
+import VideoShowcase from './VideoShowcase.vue'
 import ServicesSection from './ServicesSection.vue'
 import HowItWorks from './HowItWorks.vue'
 import AboutSection from './AboutSection.vue'
@@ -15,6 +17,8 @@ const whatsappUrl = 'https://wa.me/243900080902'
     <Navbar :whatsapp-url="whatsappUrl" />
     <main>
       <HeroSection :whatsapp-url="whatsappUrl" />
+      <Banner />
+      <VideoShowcase />
       <ServicesSection />
       <HowItWorks />
       <AboutSection />
@@ -23,3 +27,4 @@ const whatsappUrl = 'https://wa.me/243900080902'
     <Footer />
   </div>
 </template>
+

@@ -19,13 +19,13 @@ const values = [
           </h2>
           <p class="mt-6 text-base leading-relaxed text-slate-600">
             Société Delta Service Logistique (SDSL) est une structure dédiée à la facilitation
-            douanière et administrative au Katanga. Forts d'une connaissance approfondie du terrain,
-            nous accompagnons nos clients particuliers, transitaires et entreprises avec une
-            approche rigoureuse et transparente.
+            douanière et administrative au Katanga. Forts d'une connaissance approfondie du
+            terrain, nous accompagnons nos clients particuliers, transitaires et entreprises
+            avec une approche rigoureuse et transparente.
           </p>
           <p class="mt-4 text-base leading-relaxed text-slate-600">
-            Notre engagement : vous offrir un service fiable, rapide et sécurisé pour chacune de vos
-            démarches.
+            Notre engagement : vous offrir un service fiable, rapide et sécurisé pour
+            chacune de vos démarches.
           </p>
         </div>
 
@@ -43,3 +43,4 @@ const values = [
     </div>
   </section>
 </template>
+

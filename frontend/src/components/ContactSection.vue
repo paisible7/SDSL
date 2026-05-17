@@ -10,7 +10,7 @@ interface ContactInfo {
 
 const contactInfo: ContactInfo[] = [
   { icon: Phone, label: 'Téléphone / WhatsApp', value: '+243 900 080 902' },
-  { icon: Mail, label: 'Email', value: 'contact@adsl-rdc.com' },
+  { icon: Mail, label: 'Email', value: 'contact@sdsl-rdc.com' },
   { icon: MapPin, label: 'Lubumbashi', value: 'Avenue Mama Yemo, Commune de Lubumbashi' },
   { icon: MapPin, label: 'Kipushi', value: 'Avenue de la Frontière, Kipushi' },
   { icon: Clock, label: 'Horaires', value: 'Lun – Sam : 08h00 – 18h00' },
@@ -21,7 +21,7 @@ const contactInfo: ContactInfo[] = [
   <section id="contact" class="border-t border-slate-200 bg-white">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
       <header class="max-w-2xl mb-12">
-        <p class="text-sm font-semibold text-blue-700 uppercase tracking-wide">Contact</p>
+        <p class="text-sm font-semibold text-amber-600 uppercase tracking-wide">Contact</p>
         <h2 class="mt-2 text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">
           Parlons de votre dossier
         </h2>
@@ -39,10 +39,10 @@ const contactInfo: ContactInfo[] = [
           <div
             v-for="(info, i) in contactInfo"
             :key="i"
-            class="flex items-start gap-4 rounded-lg border border-slate-200 p-5"
+            class="flex items-start gap-4 rounded-xl border border-slate-200 p-5 shadow-sm transition-colors hover:border-amber-400"
           >
             <div
-              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-700"
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-amber-50 text-amber-600"
             >
               <component :is="info.icon" class="h-5 w-5" />
             </div>
@@ -56,3 +56,4 @@ const contactInfo: ContactInfo[] = [
     </div>
   </section>
 </template>
+

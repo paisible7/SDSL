@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-
 defineProps({
   whatsappUrl: { type: String, required: true },
 })
-
-const router = useRouter()
 
 interface NavLink {
   label: string
@@ -31,7 +27,9 @@ function scrollToSection(id: string) {
 <template>
   <header class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur">
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <router-link to="/" class="text-xl font-bold tracking-tight text-slate-900">SDSL</router-link>
+      <button @click="scrollToSection('accueil')" class="text-xl font-bold tracking-tight text-slate-900">
+        SDSL
+      </button>
 
       <nav class="hidden items-center gap-8 md:flex">
         <button
@@ -44,12 +42,15 @@ function scrollToSection(id: string) {
         </button>
       </nav>
 
-      <button
-        @click="scrollToSection('contact')"
+      <a
+        :href="whatsappUrl"
+        target="_blank"
+        rel="noopener noreferrer"
         class="inline-flex h-9 items-center justify-center rounded-md bg-blue-700 px-4 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-800"
       >
         Contactez-nous
-      </button>
+      </a>
     </div>
   </header>
 </template>
+

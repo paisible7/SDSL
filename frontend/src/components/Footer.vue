@@ -11,8 +11,8 @@ const currentYear = new Date().getFullYear()
         <div>
           <h3 class="text-lg font-bold text-white">SDSL</h3>
           <p class="mt-3 text-sm leading-relaxed text-slate-400">
-            Société Delta Service Logistique. Facilitation douanière et administrative à Lubumbashi
-            et Kipushi.
+            Société Delta Service Logistique. Facilitation douanière et administrative
+            à Lubumbashi et Kipushi.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ const currentYear = new Date().getFullYear()
             <li class="flex items-start gap-3">
               <MapPin class="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" :stroke-width="2" />
               <div>
-                <p class="font-medium text-white">Siège — Lubumbashi</p>
+                <p class="font-medium text-white">Siège Lubumbashi</p>
                 <p class="text-slate-400">
                   Avenue Upemba / Rue 10 n°61 (Réf : Morgue Rue 8, Katuba)
                 </p>
@@ -47,7 +47,7 @@ const currentYear = new Date().getFullYear()
             <li class="flex items-start gap-3">
               <MapPin class="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" :stroke-width="2" />
               <div>
-                <p class="font-medium text-white">Succursale — Kipushi</p>
+                <p class="font-medium text-white">Succursale Kipushi</p>
                 <p class="text-slate-400">Avenue Baratizo, Q. Kamarenge</p>
               </div>
             </li>
@@ -56,8 +56,9 @@ const currentYear = new Date().getFullYear()
       </div>
 
       <div class="mt-12 border-t border-slate-800 pt-6 text-center text-xs text-slate-500">
-        © {{ currentYear }} SDSL — Société Delta Service Logistique. Tous droits réservés.
+        © {{ currentYear }} SDSL - Société Delta Service Logistique. Tous droits réservés.
       </div>
     </div>
   </footer>
 </template>
+
