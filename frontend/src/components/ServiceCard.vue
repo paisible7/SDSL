@@ -4,6 +4,8 @@ defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   image: { type: String, default: null },
+  linkTo: { type: String, default: null },
+  linkLabel: { type: String, default: null },
 })
 </script>
 
@@ -32,7 +34,12 @@ defineProps({
     </div>
     <div class="flex flex-1 flex-col p-6">
       <h4 class="text-lg font-bold text-slate-900">{{ title }}</h4>
-      <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ description }}</p>
+      <p class="mt-2 text-sm leading-relaxed text-slate-600 mb-4">{{ description }}</p>
+      <div v-if="linkTo" class="mt-auto pt-4">
+        <router-link :to="linkTo" class="inline-flex items-center justify-center rounded-lg bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100">
+          {{ linkLabel || 'En savoir plus' }}
+        </router-link>
+      </div>
     </div>
   </div>
 </template>

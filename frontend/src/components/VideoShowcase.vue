@@ -29,7 +29,7 @@ const videos = [
           En images
         </p>
         <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          La logistique africaine, vue de l'intérieur
+          La logistique africaine, vue de l'intérieur et partout en RDC
         </h2>
         <p class="mt-4 text-base text-slate-400">
           De Lubumbashi aux postes frontaliers <br>un aperçu de notre quotidien.

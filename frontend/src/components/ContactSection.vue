@@ -13,7 +13,7 @@ const contactInfo: ContactInfo[] = [
   { icon: Mail, label: 'Email', value: 'contact@sdsl-rdc.com' },
   { icon: MapPin, label: 'Lubumbashi', value: 'Avenue Mama Yemo, Commune de Lubumbashi' },
   { icon: MapPin, label: 'Kipushi', value: 'Avenue de la Frontière, Kipushi' },
-  { icon: Clock, label: 'Horaires', value: 'Lun – Sam : 08h00 – 18h00' },
+  { icon: Clock, label: 'Horaires', value: 'Lun – Sam : 24h/24' },
 ]
 </script>
 

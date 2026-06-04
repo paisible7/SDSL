@@ -16,6 +16,8 @@ const customsServices = [
     title: 'Facilitation FERI',
     description: "Obtention rapide et sécurisée de votre Fiche Électronique de Renseignement à l'Importation.",
     image: customsImg,
+    linkTo: '/feri-documents',
+    linkLabel: 'Voir les documents requis',
   },
   {
     icon: markRaw(FileText),
@@ -85,6 +87,8 @@ const proximityServices = [
             :title="s.title"
             :description="s.description"
             :image="s.image"
+            :link-to="s.linkTo"
+            :link-label="s.linkLabel"
           />
         </div>
       </div>

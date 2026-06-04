@@ -2,11 +2,13 @@
 import containers from '../assets/containers.jpg'
 import truck from '../assets/truck.jpg'
 import plane from '../assets/cargo-plane.jpg'
+import train from '../assets/train.png'
 
 const items = [
   { img: truck, label: 'Transport routier', sub: 'Camions & convois' },
   { img: containers, label: 'Fret maritime', sub: 'Conteneurs & ports' },
   { img: plane, label: 'Fret aérien', sub: 'Cargo & logistique' },
+  { img: train, label: 'Fret ferroviaire', sub: 'Trains & wagons' },
 ]
 </script>
 
@@ -18,12 +20,12 @@ const items = [
           Notre champ d'action
         </p>
         <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Route, mer, air <br>
+          Route, mer, air, rail <br>
           nous couvrons toute la chaîne
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
         <div
           v-for="item in items"
           :key="item.label"

@@ -16,10 +16,19 @@ const links: NavLink[] = [
   { label: 'Contact', id: 'contact' },
 ]
 
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
 function scrollToSection(id: string) {
-  const el = document.getElementById(id)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  if (route.path !== '/') {
+    router.push({ path: '/', hash: '#' + id })
+  } else {
+    const el = document.getElementById(id)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
   }
 }
 </script>

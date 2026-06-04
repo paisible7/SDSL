@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'home',
       component: HomePage,
     },
+    {
+      path: '/feri-documents',
+      name: 'feri-documents',
+      component: () => import('../components/FeriDocumentsPage.vue'),
+    },
   ],
 })
 
