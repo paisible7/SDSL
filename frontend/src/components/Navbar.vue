@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import logo from '@/assets/logo.png'
+
 defineProps({
   whatsappUrl: { type: String, required: true },
 })
@@ -37,7 +39,7 @@ function scrollToSection(id: string) {
   <header class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur">
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
       <button @click="scrollToSection('accueil')" class="text-xl font-bold tracking-tight text-slate-900">
-        SDSL
+        <img :src="logo" alt="SDSL Logo" class="h-15" />
       </button>
 
       <nav class="hidden items-center gap-8 md:flex">
@@ -62,4 +64,3 @@ function scrollToSection(id: string) {
     </div>
   </header>
 </template>
-
