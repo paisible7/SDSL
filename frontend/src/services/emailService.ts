@@ -6,7 +6,10 @@ export type ContactPayload = {
   message: string
 }
 
-const ENDPOINT = import.meta.env.VITE_CONTACT_EMAIL_ENDPOINT || '/api/contact/email'
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+const ENDPOINT = API_BASE
+  ? `${API_BASE}/api/contact/email`
+  : '/api/contact/email'
 
 export async function sendEmail(payload: ContactPayload) {
   const res = await fetch(ENDPOINT, {
@@ -17,7 +20,9 @@ export async function sendEmail(payload: ContactPayload) {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
-    throw new Error(err.message || `Échec de l'envoi d\'e-mail (${res.status})`)
+    throw new Error(
+      err.message || err.error || `Échec de l'envoi d'e-mail (${res.status})`,
+    )
   }
 
   return res.json()
