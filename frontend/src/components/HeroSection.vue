@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import heroImage from '../assets/hero-banner.jpg'
-import { ShieldCheck, Clock, Award } from 'lucide-vue-next'
-
-const heroVideo = "/__l5e/assets-v1/6946cba5-b1d2-46f5-942a-8c569b342c1f/hero-africa.mp4"
+import { ShieldCheck } from 'lucide-vue-next'
 
 defineProps({
   whatsappUrl: { type: String, required: true },
@@ -28,18 +26,13 @@ onMounted(() => {
 
 <template>
   <section id="accueil" class="relative overflow-hidden bg-slate-950">
-    <!-- Background video (with image fallback as poster) -->
+    <!-- Background image -->
     <div class="absolute inset-0">
-      <video
-        :src="heroVideo"
-        :poster="heroImage"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="metadata"
+      <img
+        :src="heroImage"
+        alt=""
         class="h-full w-full object-cover opacity-50"
-      ></video>
+      />
       <div class="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/80 to-blue-950/70"></div>
     </div>
 

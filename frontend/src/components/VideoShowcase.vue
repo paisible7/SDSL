@@ -2,19 +2,14 @@
 import truckPoster from '../assets/truck.jpg'
 import customsPoster from '../assets/customs-docs.png'
 
-const heroVideo = "/__l5e/assets-v1/6946cba5-b1d2-46f5-942a-8c569b342c1f/hero-africa.mp4"
-const customsVideo = "/__l5e/assets-v1/62289fcb-d2b3-417a-a30b-64498f14b97e/customs-africa.mp4"
-
-const videos = [
+const showcases = [
   {
-    src: heroVideo,
-    poster: truckPoster,
+    image: truckPoster,
     title: 'Sur les routes du Katanga',
     sub: 'Convois & transport routier',
   },
   {
-    src: customsVideo,
-    poster: customsPoster,
+    image: customsPoster,
     title: 'Aux postes frontaliers',
     sub: 'Dédouanement & inspection',
   },
@@ -38,24 +33,19 @@ const videos = [
 
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div
-          v-for="v in videos"
-          :key="v.title"
+          v-for="item in showcases"
+          :key="item.title"
           class="group relative overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-2xl"
         >
-          <video
-            :src="v.src"
-            :poster="v.poster"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
+          <img
+            :src="item.image"
+            :alt="item.title"
             class="h-80 w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          ></video>
+          />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
           <div class="absolute inset-x-0 bottom-0 p-6">
-            <p class="text-xs font-medium uppercase tracking-wider text-amber-300">{{ v.sub }}</p>
-            <h3 class="mt-1 text-xl font-bold text-white">{{ v.title }}</h3>
+            <p class="text-xs font-medium uppercase tracking-wider text-amber-300">{{ item.sub }}</p>
+            <h3 class="mt-1 text-xl font-bold text-white">{{ item.title }}</h3>
           </div>
         </div>
       </div>

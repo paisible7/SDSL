@@ -37,8 +37,8 @@ const DEFAULT_CORS_ORIGINS = [
   "https://www.sdsl-logistique.com",
   "http://sdsl-logistique.com",
   "http://www.sdsl-logistique.com",
-  //"http://localhost:5173",
-  //"http://127.0.0.1:5173",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
 ];
 
 const allowedOrigins = new Set([
