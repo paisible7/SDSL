@@ -4,6 +4,8 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 const { isSmtpConfigured } = require("./smtpConfig");
 
 const keys = [
+  "SMTP_TRANSPORT",
+  "SENDMAIL_PATH",
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",

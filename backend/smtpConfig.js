@@ -1,4 +1,18 @@
+const fs = require("fs");
+
+function usesSendmail(env = process.env) {
+  return env.SMTP_TRANSPORT === "sendmail";
+}
+
 function buildSmtpTransportOptions(env = process.env) {
+  if (usesSendmail(env)) {
+    return {
+      sendmail: true,
+      newline: "unix",
+      path: env.SENDMAIL_PATH || "/usr/sbin/sendmail",
+    };
+  }
+
   const {
     SMTP_HOST,
     SMTP_PORT,
@@ -33,13 +47,31 @@ function buildSmtpTransportOptions(env = process.env) {
 }
 
 function isSmtpConfigured(env = process.env) {
+  if (usesSendmail(env)) {
+    const sendmailPath = env.SENDMAIL_PATH || "/usr/sbin/sendmail";
+    return fs.existsSync(sendmailPath);
+  }
+
   const { SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_NO_AUTH } = env;
   if (!SMTP_HOST) return false;
   if (SMTP_NO_AUTH === "true") return true;
   return Boolean(SMTP_USER && SMTP_PASS);
 }
 
+function describeTransport(env = process.env) {
+  if (usesSendmail(env)) {
+    return `sendmail (${env.SENDMAIL_PATH || "/usr/sbin/sendmail"})`;
+  }
+
+  const options = buildSmtpTransportOptions(env);
+  return (
+    `${options.host}:${options.port}` + (options.auth ? " (auth)" : " (sans auth)")
+  );
+}
+
 module.exports = {
   buildSmtpTransportOptions,
   isSmtpConfigured,
+  usesSendmail,
+  describeTransport,
 };

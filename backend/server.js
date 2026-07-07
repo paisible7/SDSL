@@ -17,6 +17,7 @@ const {
 const {
   buildSmtpTransportOptions,
   isSmtpConfigured,
+  describeTransport,
 } = require("./smtpConfig");
 
 const app = express();
@@ -74,10 +75,7 @@ let transporter;
 if (isSmtpReady) {
   const smtpOptions = buildSmtpTransportOptions(process.env);
   transporter = nodemailer.createTransport(smtpOptions);
-  console.log(
-    `SMTP : ${smtpOptions.host}:${smtpOptions.port}` +
-      (smtpOptions.auth ? " (auth)" : " (sans auth)"),
-  );
+  console.log(`SMTP : ${describeTransport(process.env)}`);
 } else {
   console.warn(
     "SMTP non configuré. Les envois par e-mail ne seront pas disponibles (SMTP_HOST, SMTP_USER, SMTP_PASS).",
