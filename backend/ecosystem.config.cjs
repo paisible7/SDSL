@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "sdsl-api",
+      name: "api-logistic",
       script: "server.js",
       cwd: __dirname,
       instances: 1,

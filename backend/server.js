@@ -1,5 +1,12 @@
 const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, ".env") });
+const envPath = path.join(__dirname, ".env");
+const envResult = require("dotenv").config({ path: envPath });
+
+if (envResult.error) {
+  console.warn(`Fichier .env introuvable : ${envPath}`);
+} else {
+  console.log(`Configuration chargée depuis ${envPath}`);
+}
 const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
@@ -158,4 +165,9 @@ app.post("/api/contact/email", async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Serveur backend en écoute sur http://localhost:${port}`);
+  console.log(
+    isSmtpConfigured
+      ? "SMTP configuré — envoi d'e-mails activé."
+      : "SMTP NON configuré — vérifiez SMTP_HOST, SMTP_USER et SMTP_PASS dans .env",
+  );
 });
