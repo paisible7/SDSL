@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { Loader2, CheckCircle2, AlertCircle, MessageCircle, Mail } from 'lucide-vue-next'
-import { sendWhatsAppMessage } from '../services/twilioService'
+import { openWhatsAppChat } from '../services/whatsappService'
 import { sendEmail } from '../services/emailService'
 
 interface Form {
@@ -62,24 +62,33 @@ function switchChannel(value: Channel) {
 
 async function onSubmit() {
   if (!validate()) return
-  status.value = 'loading'
   errorMessage.value = ''
 
+  const payload = {
+    name: form.name.trim(),
+    phone: form.phone.trim(),
+    email: form.email.trim(),
+    subject: form.subject,
+    message: form.message.trim(),
+  }
+
+  if (isWhatsApp.value) {
+    openWhatsAppChat(payload)
+    status.value = 'success'
+    Object.assign(form, {
+      name: '',
+      phone: '',
+      email: '',
+      subject: 'Demande de renseignement',
+      message: '',
+    })
+    return
+  }
+
+  status.value = 'loading'
+
   try {
-    const payload = {
-      name: form.name.trim(),
-      phone: form.phone.trim(),
-      email: form.email.trim(),
-      subject: form.subject,
-      message: form.message.trim(),
-    }
-
-    if (isWhatsApp.value) {
-      await sendWhatsAppMessage(payload)
-    } else {
-      await sendEmail(payload)
-    }
-
+    await sendEmail(payload)
     status.value = 'success'
     Object.assign(form, {
       name: '',
@@ -134,7 +143,7 @@ async function onSubmit() {
 
     <p class="text-sm text-slate-500">
       <template v-if="isWhatsApp">
-        Votre message sera envoyé directement à notre équipe via WhatsApp (Twilio).
+        Vous serez redirigé vers WhatsApp pour envoyer votre message à notre équipe.
       </template>
       <template v-else> Votre message sera envoyé par email à notre équipe. </template>
     </p>
@@ -221,9 +230,11 @@ async function onSubmit() {
         class="flex items-start gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800"
       >
         <CheckCircle2 class="h-5 w-5 shrink-0" />
-        <span>
-          Message envoyé avec succès via {{ isWhatsApp ? 'WhatsApp' : 'email' }}. Nous vous
-          répondrons rapidement.
+        <span v-if="isWhatsApp">
+          WhatsApp s'ouvre dans un nouvel onglet. Envoyez le message pour nous contacter.
+        </span>
+        <span v-else>
+          Message envoyé avec succès par email. Nous vous répondrons rapidement.
         </span>
       </div>
 
@@ -246,7 +257,7 @@ async function onSubmit() {
           status === 'loading'
             ? 'Envoi en cours...'
             : isWhatsApp
-              ? 'Envoyer via WhatsApp'
+              ? 'Ouvrir WhatsApp'
               : 'Envoyer par Email'
         }}
       </button>

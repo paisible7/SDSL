@@ -1,7 +1,6 @@
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
-const twilio = require("twilio");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const {
@@ -13,10 +12,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_WHATSAPP_FROM,
-  ADSL_WHATSAPP_TO,
   SMTP_HOST,
   SMTP_PORT,
   SMTP_USER,
@@ -42,25 +37,11 @@ app.use(
     },
   }),
 );
-app.use(express.json()); // Pour traiter les données JSON envoyées par le frontend
+app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "sdsl-api" });
 });
-
-const isTwilioConfigured =
-  TWILIO_ACCOUNT_SID?.startsWith("AC") &&
-  TWILIO_AUTH_TOKEN &&
-  TWILIO_WHATSAPP_FROM;
-
-let client;
-if (isTwilioConfigured) {
-  client = new twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-} else {
-  console.warn(
-    "Twilio non configuré ou identifiants invalides. Les envois WhatsApp ne seront pas disponibles.",
-  );
-}
 
 const isSmtpConfigured = Boolean(SMTP_HOST && SMTP_USER && SMTP_PASS);
 
@@ -81,53 +62,6 @@ if (isSmtpConfigured) {
     "SMTP non configuré. Les envois par e-mail ne seront pas disponibles (SMTP_HOST, SMTP_USER, SMTP_PASS).",
   );
 }
-
-// Endpoint pour envoyer un message WhatsApp via le backend
-app.post("/api/contact/whatsapp", (req, res) => {
-  const { name, phone, email, subject, message } = req.body;
-  const toNumber = ADSL_WHATSAPP_TO;
-
-  if (!isTwilioConfigured) {
-    return res.status(500).json({
-      success: false,
-      message:
-        "Twilio non configuré ou identifiants invalides. Merci de vérifier TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN et TWILIO_WHATSAPP_FROM.",
-    });
-  }
-
-  if (!toNumber) {
-    return res.status(400).json({
-      success: false,
-      message:
-        "Numéro de destination WhatsApp non configuré (ADSL_WHATSAPP_TO).",
-    });
-  }
-
-  const bodyText =
-    `Nouveau message SDSL\n\n` +
-    `De: ${name} (${phone})\n` +
-    `Email: ${email || "non renseigné"}\n` +
-    `Sujet: ${subject}\n\n` +
-    `${message}`;
-
-  client.messages
-    .create({
-      from: TWILIO_WHATSAPP_FROM,
-      to: `whatsapp:${toNumber}`,
-      body: bodyText,
-    })
-    .then((message) => {
-      console.log(`Message envoyé avec succès, SID: ${message.sid}`);
-      res.json({ success: true, sid: message.sid });
-    })
-    .catch((error) => {
-      console.error("Erreur lors de l'envoi WhatsApp :", error);
-      res.status(500).json({
-        success: false,
-        message: error.message || "Erreur lors de l'envoi WhatsApp.",
-      });
-    });
-});
 
 // Endpoint pour envoyer un e-mail via SMTP
 app.post("/api/contact/email", async (req, res) => {
@@ -186,7 +120,6 @@ app.post("/api/contact/email", async (req, res) => {
   };
 
   const mailOptions = {
-    // Affiche le visiteur comme expéditeur ; l'envoi réel passe par le compte SMTP
     from: `"${visitorName}" <${visitorEmail}>`,
     sender: SMTP_USER,
     to: toEmail,
