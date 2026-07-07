@@ -7,6 +7,7 @@
     "start": "node server.js",
     "dev": "node server.js",
     "check-env": "node check-env.js",
+    "test-smtp": "node test-smtp.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

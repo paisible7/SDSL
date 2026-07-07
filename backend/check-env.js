@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
+const { isSmtpConfigured } = require("./smtpConfig");
 
 const keys = [
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
   "SMTP_PASS",
+  "SMTP_NO_AUTH",
+  "SMTP_SECURE",
   "SMTP_TO",
   "SMTP_FROM",
   "PORT",
@@ -28,7 +31,5 @@ for (const key of keys) {
 }
 
 console.log("");
-console.log(
-  "SMTP prêt :",
-  Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS),
-);
+console.log("SMTP prêt :", isSmtpConfigured(process.env));
+console.log("Lancer aussi : npm run test-smtp");

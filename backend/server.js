@@ -14,6 +14,10 @@ const {
   buildContactEmailHtml,
   buildContactEmailText,
 } = require("./emailTemplates");
+const {
+  buildSmtpTransportOptions,
+  isSmtpConfigured,
+} = require("./smtpConfig");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -64,20 +68,16 @@ app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "sdsl-api" });
 });
 
-const isSmtpConfigured = Boolean(SMTP_HOST && SMTP_USER && SMTP_PASS);
+const isSmtpReady = isSmtpConfigured(process.env);
 
 let transporter;
-if (isSmtpConfigured) {
-  transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT || 587),
-    secure: SMTP_PORT === "465",
-    requireTLS: SMTP_PORT !== "465",
-    auth: {
-      user: SMTP_USER,
-      pass: SMTP_PASS,
-    },
-  });
+if (isSmtpReady) {
+  const smtpOptions = buildSmtpTransportOptions(process.env);
+  transporter = nodemailer.createTransport(smtpOptions);
+  console.log(
+    `SMTP : ${smtpOptions.host}:${smtpOptions.port}` +
+      (smtpOptions.auth ? " (auth)" : " (sans auth)"),
+  );
 } else {
   console.warn(
     "SMTP non configuré. Les envois par e-mail ne seront pas disponibles (SMTP_HOST, SMTP_USER, SMTP_PASS).",
@@ -93,7 +93,7 @@ if (isSmtpConfigured) {
 app.post("/api/contact/email", async (req, res) => {
   const { name, phone, email, subject, message } = req.body;
 
-  if (!isSmtpConfigured) {
+  if (!isSmtpReady) {
     return res.status(500).json({
       success: false,
       message:
@@ -171,7 +171,7 @@ app.post("/api/contact/email", async (req, res) => {
 app.listen(port, () => {
   console.log(`Serveur backend en écoute sur http://localhost:${port}`);
   console.log(
-    isSmtpConfigured
+    isSmtpReady
       ? "SMTP configuré — envoi d'e-mails activé."
       : "SMTP NON configuré — vérifiez SMTP_HOST, SMTP_USER et SMTP_PASS dans .env",
   );
