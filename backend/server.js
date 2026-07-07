@@ -21,20 +21,34 @@ const {
   CORS_ORIGINS,
 } = process.env;
 
-const allowedOrigins = CORS_ORIGINS
-  ? CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean)
-  : [];
+const DEFAULT_CORS_ORIGINS = [
+  "https://sdsl-logistique.com",
+  "https://www.sdsl-logistique.com",
+  "http://sdsl-logistique.com",
+  "http://www.sdsl-logistique.com",
+  //"http://localhost:5173",
+  //"http://127.0.0.1:5173",
+];
 
-// Middleware
+const allowedOrigins = new Set([
+  ...DEFAULT_CORS_ORIGINS,
+  ...(CORS_ORIGINS
+    ? CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean)
+    : []),
+]);
+
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.has(origin)) {
         callback(null, true);
         return;
       }
-      callback(new Error(`Origine non autorisée par CORS : ${origin}`));
+      console.warn(`CORS refusé pour l'origine : ${origin}`);
+      callback(null, false);
     },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
   }),
 );
 app.use(express.json());
