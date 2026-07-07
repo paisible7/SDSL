@@ -82,6 +82,11 @@ if (isSmtpConfigured) {
   console.warn(
     "SMTP non configuré. Les envois par e-mail ne seront pas disponibles (SMTP_HOST, SMTP_USER, SMTP_PASS).",
   );
+  console.warn("Variables SMTP détectées :", {
+    SMTP_HOST: SMTP_HOST ? "défini" : "manquant",
+    SMTP_USER: SMTP_USER ? "défini" : "manquant",
+    SMTP_PASS: SMTP_PASS ? "défini" : "manquant",
+  });
 }
 
 // Endpoint pour envoyer un e-mail via SMTP
