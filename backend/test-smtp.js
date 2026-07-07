@@ -67,14 +67,10 @@ async function main() {
     console.log("OK — envoi d'e-mails possible.");
   } catch (error) {
     console.error("ÉCHEC —", error.message);
-    console.log("\nSur votre VPS, tous les ports SMTP locaux sont fermés.");
-    console.log("Solution recommandée Hestia — dans .env :");
-    console.log("  SMTP_TRANSPORT=sendmail");
-    console.log("  SENDMAIL_PATH=/usr/sbin/sendmail");
-    console.log("  SMTP_TO=guelordnkulu@sdsl-logistique.com");
-    console.log("  SMTP_FROM=SDSL Logistique <guelordnkulu@sdsl-logistique.com>");
-    console.log("  PORT=3000");
-    console.log("  CORS_ORIGINS=https://sdsl-logistique.com,https://www.sdsl-logistique.com");
+    console.log("\nSur Hestia, si erreur de certificat avec localhost:587 :");
+    console.log("  Option A (recommandé) : SMTP_TRANSPORT=sendmail");
+    console.log("  Option B : SMTP_HOST=127.0.0.1 SMTP_PORT=25 SMTP_NO_AUTH=true");
+    console.log("  Option C : SMTP_HOST=mail.sdsl-logistique.com SMTP_PORT=465 SMTP_SECURE=true");
   }
 }
 

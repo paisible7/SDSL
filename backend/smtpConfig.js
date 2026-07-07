@@ -24,6 +24,7 @@ function buildSmtpTransportOptions(env = process.env) {
   } = env;
 
   const port = Number(SMTP_PORT || 587);
+  const isLocalHost = ["localhost", "127.0.0.1"].includes(SMTP_HOST);
   const options = {
     host: SMTP_HOST,
     port,
@@ -34,6 +35,11 @@ function buildSmtpTransportOptions(env = process.env) {
     options.requireTLS = false;
   } else if (!options.secure) {
     options.requireTLS = true;
+  }
+
+  // Exim local : certificat souvent au nom du VPS, pas "localhost"
+  if (isLocalHost) {
+    options.tls = { rejectUnauthorized: false };
   }
 
   if (SMTP_NO_AUTH !== "true") {
